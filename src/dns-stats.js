@@ -22,11 +22,25 @@ const { NotImplementedError } = require('../extensions/index.js');
  * }
  *
  */
-function getDNSStats(domains) {
-  if (domains.length === 0) return {};
-  if (domains.length === 1) return { '.com': 1, '.com.epam': 1 };
-  return { '.com': 2, '.com.epam': 2, '.com.epam.info': 1 };
 
+
+function getDNSStats(domains) {
+  let result = {};
+  if (domains.length === 0) return result;
+
+  for (let i = 0; i < domains.length; i++) {
+    let domainArray = domains[i].split(".");
+    let str = "";
+    for (let dns = 0; dns < domainArray.length; dns++) {
+      str = str + "." + domainArray[domainArray.length - dns - 1];
+      if (result.hasOwnProperty(str)) {
+        result[str]++;
+      } else {
+        result[str] = 1;
+      }
+    }
+  }
+  return result;
 }
 
 module.exports = {
